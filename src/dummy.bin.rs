@@ -57,8 +57,8 @@ impl WindowDelegate for AppWindow {
 
     let mut y=Button::new("❗Overwrite"	);y.set_action(|| {});y.set_key_equivalent("\r");//🖍
     let mut n=Button::new("Cancel"    	);n.set_action(|| {});n.set_key_equivalent("a");
-    //y.set_highlighted(false);//*y.set_bezel_style(BezelStyle::RegularSquare);*/y.set_control_size(ControlSize::Large);y.set_text_color(Color::SystemRed  );
-    //n.set_highlighted(true );//*n.set_bezel_style(BezelStyle::RegularSquare);*/n.set_control_size(ControlSize::Large);n.set_text_color(Color::SystemBlack);
+    y.set_highlighted(false);y.set_bezel_style(BezelStyle::Inline);y.set_control_size(ControlSize::Large);y.set_text_color(Color::SystemRed  );
+    n.set_highlighted(true );n.set_bezel_style(BezelStyle::RegularSquare);n.set_control_size(ControlSize::Large);n.set_text_color(Color::SystemBlack);
     self.content.add_subview(&y);
     self.content.add_subview(&n);
 
