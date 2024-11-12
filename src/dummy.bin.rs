@@ -43,7 +43,7 @@ impl WindowDelegate for AppWindow {
   fn did_load(&mut self, win: Window) {
     win.set_title("AutoLayout Example");
     win.set_minimum_content_size(30., 30.);
-    win.set_maximum_content_size(430., 330.);
+    // win.set_maximum_content_size(430., 630.);
     win.set_movable_by_background	(true	);
 
     let dynamic = Color::dynamic(|style| match (style.theme, style.contrast) {
@@ -57,8 +57,8 @@ impl WindowDelegate for AppWindow {
 
     let mut y=Button::new("❗Overwrite"	);y.set_action(|| {});y.set_key_equivalent("\r");//🖍
     let mut n=Button::new("Cancel"    	);n.set_action(|| {});n.set_key_equivalent("a");
-    y.set_highlighted(false);y.set_bezel_style(BezelStyle::Inline);y.set_control_size(ControlSize::Large);y.set_text_color(Color::SystemRed  );
-    n.set_highlighted(true );n.set_bezel_style(BezelStyle::RegularSquare);n.set_control_size(ControlSize::Large);n.set_text_color(Color::SystemBlack);
+    //y.set_highlighted(false);//*y.set_bezel_style(BezelStyle::RegularSquare);*/y.set_control_size(ControlSize::Large);y.set_text_color(Color::SystemRed  );
+    //n.set_highlighted(true );//*n.set_bezel_style(BezelStyle::RegularSquare);*/n.set_control_size(ControlSize::Large);n.set_text_color(Color::SystemBlack);
     self.content.add_subview(&y);
     self.content.add_subview(&n);
 
@@ -69,18 +69,29 @@ impl WindowDelegate for AppWindow {
       n            	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
       n            	.leading 	.constraint_equal_to(&self.content.leading 	).offset( 16.),
       n            	.width   	.constraint_equal_to_constant(100.         	),
-      n            	.height  	.constraint_equal_to_constant(20.          	),
+      // n         	.height  	.constraint_equal_to_constant(20.          	),
       y            	.top     	.constraint_equal_to(&self.content.top     	).offset(126.),
       y            	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
       // y         	.leading 	.constraint_equal_to(&self.content.leading 	).offset(206.),
       y            	.trailing	.constraint_equal_to(&self.content.trailing	).offset(-16.),
       y            	.width   	.constraint_equal_to_constant(200.         	),
-      y            	.height  	.constraint_equal_to_constant(20.          	),
+      // y         	.height  	.constraint_equal_to_constant(20.          	),
+      // self.blue 	.top     	.constraint_equal_to(&self.content.top     	).offset(146.),
+      // self.blue 	.leading 	.constraint_equal_to(&self.content.leading 	).offset( 16.),
+      // self.blue 	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
+      // self.blue 	.width   	.constraint_equal_to_constant(100.         	),
+      // self.blue 	.height  	.constraint_equal_to_constant(10.          	),
+      // self.red  	.top     	.constraint_equal_to(&self.content.top     	).offset( 46.),
+      // self.red  	.leading 	.constraint_equal_to(&self.blue.trailing   	).offset( 16.),
+      // self.red  	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
+      // self.green	.top     	.constraint_equal_to(&self.content.top     	).offset( 46.),
+      // self.green	.leading 	.constraint_equal_to(&self.red.trailing    	).offset( 16.),
+      // self.green	.trailing	.constraint_equal_to(&self.content.trailing	).offset(-16.),
+      // self.green	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
+      // self.green	.width   	.constraint_equal_to_constant(100.         	),
     ]);
-    let bYes = y;
-    let bNo  = n;
-    self.button = Some(bYes);
-    self.button2 = Some(bNo);
+    self.button = Some(y);
+    self.button2 = Some(n);
   }
 }
 
