@@ -71,15 +71,20 @@ impl LayoutConstraintExt for cacao::layout::LayoutConstraint {
     unsafe {let m = multiplier as CGFloat; let _: () = msg_send![&*self.constraint, setConstant:m];}
   }
 }
-trait ButtonExt {
-  fn set_image_pos(&mut self, image_pos:NSCellImagePosition);
-}
-use objc2_app_kit::{NSCellImagePosition,};
-impl ButtonExt for cacao::button::Button {
-  /// Sets an image position on the underlying button
-  fn set_image_pos(&mut self, image_pos:NSCellImagePosition) {
-    self.objc.with_mut(|obj| unsafe {let _: () = msg_send![obj, setImagePosition:image_pos];});}
-}
+
+// trait ImageExt {
+//   fn os_icon(icon:objc2_app_kit::NSImageName) -> Self;
+// }
+// impl ImageExt for cacao::image::Image {
+//   /// Returns a stock system icon, ⚠️NOT guaranteed to exist across all versions of macOS supported
+//   #[cfg(target_os = "macos")]
+//   pub fn os_icon(icon:objc2_app_kit::NSImageName) -> Self {
+//     Image(unsafe {ShareId::from_ptr({
+//       let icon = icon.to_id();
+//       msg_send![class!(NSImage), imageNamed:icon]})
+//     })
+//   }
+// }
 impl WindowDelegate for AppWindow {
   const NAME: &'static str = "WindowDelegate";
   fn did_load(&mut self, win: Window) {
