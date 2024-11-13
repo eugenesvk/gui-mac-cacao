@@ -34,15 +34,15 @@ use cacao::{
   text   	::{Label,TextAlign,},
   view   	::{View,ViewDelegate,ViewController,},
   switch 	::Switch,
-  button 	::{Button,BezelStyle, BezelStyle as Border,},
+  button 	::{Button,BezelStyle, BezelStyle as Border,ImagePosition,},
   control	::{Control,ControlSize,},
   color  	::{Color, Theme,},
-  image  	::{Image,MacSystemIcon,SFSymbol,},
+  image  	::{Image,MacSystemIcon,SFSymbol},
   utils  	::os::OS_VERSION,
 };
 use cacao::appkit::FocusRingType;
 
-use objc::{class, msg_send, sel, sel_impl,runtime	::Object, };
+use cacao::objc::{class, msg_send, sel, sel_impl};
 use core_graphics::base::CGFloat;
 
 // no effect since multiplier doesn't seem to be used
@@ -110,7 +110,7 @@ impl WindowDelegate for AppWindow {
       if *os_major >= 11 {//debug!("info major version={:?}", os_major);
         let icon = Image::symbol(SFSymbol::SquareAndArrowDownOnSquareFill, "Overwrite"); //SFSymbol min version 11, alt MacSystemIcon
         y.set_image(icon);
-        y.set_image_pos(NSCellImagePosition::NSImageLeft);
+        y.set_image_position(ImagePosition::ImageLeft);
       }
     }
     self.content.add_subview(&y);
