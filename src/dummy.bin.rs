@@ -30,14 +30,13 @@ impl AppDelegate for BasicApp {
 }
 #[derive(Default)] struct AppWindow {content:View, button:Option<Button>, button2:Option<Button>,} //option avoids lack of default Button
 use cacao::{
-  layout 	::{Layout,LayoutConstraint},
-  text   	::{Label,TextAlign},
-  view   	::{View,ViewDelegate,ViewController},
+  layout 	::{Layout,LayoutConstraint,},
+  text   	::{Label,TextAlign,},
+  view   	::{View,ViewDelegate,ViewController,},
   switch 	::Switch,
-  button 	::{Button,BezelStyle, BezelStyle as Border},
+  button 	::{Button,BezelStyle, BezelStyle as Border,},
   control	::{Control,ControlSize,},
-  color  	::{Color, Theme},
-  image  	::{Image,MacSystemIcon},
+  color  	::{Color, Theme,},
 };
 use cacao::appkit::FocusRingType;
 
