@@ -92,8 +92,8 @@ impl WindowDelegate for AppWindow {
       (Theme::Dark, _)	=> Color::SystemGreen,
       _               	=> Color::SystemRed});
 
-    let mut y=Button::new("Overwrite"	);y.set_action(|| {});y.set_key_equivalent("y"); //❗
-    let mut n=Button::new("Cancel"   	);n.set_action(|| {});n.set_key_equivalent("\r");
+    let mut y=Button::new("Overwrite"	);y.set_action(|_| {});y.set_key_equivalent("y"); //❗
+    let mut n=Button::new("Skip"     	);n.set_action(|_| {});n.set_key_equivalent("\r");
     y.set_control_size(ControlSize::Large);
     n.set_control_size(ControlSize::Large);
     // y.set_alpha(0.1);
