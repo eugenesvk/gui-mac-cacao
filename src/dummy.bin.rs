@@ -15,9 +15,44 @@ use std::result;
 
 type Result<T> = result::Result<T, Box<dyn Error>>;
 #![allow(unused_imports)]
+use cacao::events::EventType;
+use std::sync::RwLock;
 use cacao::appkit::menu::{Menu, MenuItem};use cacao::appkit::window::{Window, WindowConfig, WindowDelegate};use cacao::appkit::{App, AppDelegate};
 use cacao::foundation::NSString;
-struct BasicApp {window: Window<AppWindow>}
+struct BasicApp {window: Window<AppWindow>,key_monitor: RwLock<Option<EventMonitor>>}
+impl BasicApp {
+  /// Monitor for key presses, and dispatch if they match an action we're after
+  pub fn start_monitoring(&self) {
+    let mut lock = self.key_monitor.write().unwrap();
+    *lock = Some(Event::local_monitor(EventMask::KeyDown | EventMask::KeyUp | EventMask::FlagsChanged, |evt| {
+      //use calculator::{dispatch, Msg};
+      let kind = evt.kind();
+      let ev_t:&str = match kind {
+        EventType::FlagsChanged	=> "Δ in ⇧⎈⎇⌘",
+        EventType::KeyDown     	=> "↓",
+        EventType::KeyUp       	=> "↑",
+        _                      	=> "other",
+      };
+      match evt.kind() {
+         EventType::KeyDown
+        |EventType::KeyUp	=> {
+          let chars = evt.characters(); //characters associated with a key-up or key-down event
+          // dbg!("{} 𝚻{:?} ev_t={} ev={:?}", chars, kind, ev_t, evt);
+          match chars.as_ref() {
+            "y" => {press_y("letter y")},
+            "c" => {press_n("letter c")},
+            "s" => {press_n("letter s")},
+            _ => return Some(evt),
+          }
+        },
+        _	=> {//dbg!("  𝚻{:?} ev_t={} ev={:?}", kind, ev_t, evt);
+          return None},
+      }
+      None
+    }));
+  }
+}
+
 impl AppDelegate for BasicApp {
   fn did_finish_launching(&self) {
     App::set_menu(vec![
@@ -25,9 +60,11 @@ impl AppDelegate for BasicApp {
       Menu::new("File", vec![MenuItem::CloseWindow]),
     ]);
     App::activate();self.window.show();
+    self.start_monitoring(); // Event Monitors need to be started after the App has been activated. We use an RwLock here, but it's possible this entire method can be &mut self and you wouldn't need these kinds of shenanigans.
   }
   fn should_terminate_after_last_window_closed(&self) -> bool {true}
 }
+use cacao::appkit::{Event, EventMask, EventMonitor};
 #[derive(Default)] struct AppWindow {content:View, button:Option<Button>, button2:Option<Button>,} //option avoids lack of default Button
 use cacao::{
   layout 	::{Layout,LayoutConstraint,},
@@ -85,6 +122,8 @@ impl LayoutConstraintExt for cacao::layout::LayoutConstraint {
 //     })
 //   }
 // }
+fn press_y(s:&str) {println!("Y action from: {}",s)}
+fn press_n(s:&str) {println!("N action from: {}",s)}
 impl WindowDelegate for AppWindow {
   const NAME: &'static str = "WindowDelegate";
   fn did_load(&mut self, win: Window) {
@@ -97,8 +136,8 @@ impl WindowDelegate for AppWindow {
       (Theme::Dark, _)	=> Color::SystemGreen,
       _               	=> Color::SystemRed});
 
-    let mut y=Button::new("Overwrite"	);y.set_action(|_| {});y.set_key_equivalent("y"); //❗
-    let mut n=Button::new("Skip"     	);n.set_action(|_| {});n.set_key_equivalent("\r");
+    let mut y=Button::new("Overwrite"	);y.set_action(|_| {press_y("UI button")});y.set_key_equivalent("y"); //❗
+    let mut n=Button::new("Skip"     	);n.set_action(|_| {press_n("UI button")});n.set_key_equivalent("\r");
     y.set_control_size(ControlSize::Large);
     n.set_control_size(ControlSize::Large);
     // y.set_alpha(0.1);
@@ -177,5 +216,5 @@ impl WindowDelegate for AppWindow {
 }
 
 fn main() {
-  App::new("com.test.window", BasicApp {window: Window::with(WindowConfig::default(), AppWindow::default())}).run();
+  App::new("com.test.window", BasicApp {window:Window::with(WindowConfig::default(),AppWindow::default()), key_monitor:RwLock::new(None)}).run();
 }
