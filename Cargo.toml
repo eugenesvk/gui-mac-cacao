@@ -1,5 +1,5 @@
 [package]  # help on keys doc.rust-lang.org/cargo/reference/manifest.html
-name   	= "dummy"
+name   	= "cacao-yes-no"
 version	= "0.1.0"
 authors	= ["{{authors}}"]
 edition	= "2021"
@@ -24,6 +24,12 @@ log          	= "0.4"
 stderrlog    	= "0.5"
 anyhow       	= "1.0"
 faccess      	= "0.2"
+# OS GUI (shared sub-deps must match the ones used in cacao)
+cacao            	= "0.4.0-beta2"
+# core-foundation	= { git = "https://github.com/madsmtm/core-foundation-rs.git", rev = "7d593d016175755e492a92ef89edca68ac3bd5cd" }
+core-graphics    	= { git = "https://github.com/madsmtm/core-foundation-rs.git", rev = "7d593d016175755e492a92ef89edca68ac3bd5cd" }
+# OS integration
+os_info	= "3.0.1"
 
 [build-dependencies]
 log	= "0.4"
