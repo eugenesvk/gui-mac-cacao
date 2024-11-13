@@ -136,8 +136,8 @@ impl WindowDelegate for AppWindow {
       (Theme::Dark, _)	=> Color::SystemGreen,
       _               	=> Color::SystemRed});
 
-    let mut y=Button::new("Overwrite"	);y.set_action(|_| {press_y("UI button")});y.set_key_equivalent("y"); //❗
-    let mut n=Button::new("Skip"     	);n.set_action(|_| {press_n("UI button")});n.set_key_equivalent("\r");
+    let mut y=Button::new("O̲verwrite"	);y.set_action(|_| {press_y("UI button")});y.set_key_equivalent("o"); //❗
+    let mut n=Button::new("S̲kip"     	);n.set_action(|_| {press_n("UI button")});n.set_key_equivalent("\r");
     y.set_control_size(ControlSize::Large);
     n.set_control_size(ControlSize::Large);
     // y.set_alpha(0.1);
@@ -161,8 +161,8 @@ impl WindowDelegate for AppWindow {
 
     win.set_content_view(&self.content);
 
-    let yl	= Label::new();yl.set_text("y")	;self.content.add_subview(&yl	);
-    let nl	= Label::new();nl.set_text("↩")	;self.content.add_subview(&nl	);
+    let yl	= Label::new();yl.set_text("y")  	;self.content.add_subview(&yl	);
+    let nl	= Label::new();nl.set_text("↩¦c")	;self.content.add_subview(&nl	);
 
     let hn:f64 = 20.0; let hy:f64 = hn; //20 seems to be the default large, but manually setting.height makes the buttons bug and have diff H
     LayoutConstraint::activate(&[
