@@ -14,7 +14,6 @@ use std::error::Error;
 use std::result;
 
 type Result<T> = result::Result<T, Box<dyn Error>>;
-#![allow(unused_imports)]
 use cacao::events::EventType;
 use std::sync::RwLock;
 use cacao::appkit::menu::{Menu, MenuItem};use cacao::appkit::window::{Window, WindowConfig, WindowDelegate};use cacao::appkit::{App, AppDelegate};
