@@ -84,12 +84,13 @@ impl WindowDelegate for AppWindow {
     let mut n=Button::new("Cancel"    	);n.set_action(|| {});n.set_key_equivalent("\r");
     y.set_control_size(ControlSize::Large);
     n.set_control_size(ControlSize::Large);
-    y.set_alpha(0.1);
-    n.set_alpha(0.9);
+    // y.set_alpha(0.1);
+    // n.set_alpha(0.9);
     y.set_bezel_style(BezelStyle::RegularSquare);
     n.set_bezel_style(BezelStyle::RegularSquare); // RegularSquare, ShadowlessSquare,SmallSquare,TexturedSquare break become vertical 100% of the height
+    n.set_bezel_style(BezelStyle::Rounded);
     y.set_focus_ring_type(FocusRingType::Exterior); // seems to have no effect
-    n.set_focus_ring_type(FocusRingType::None); // already an highlighted button, don't u
+    n.set_focus_ring_type(FocusRingType::None); // already an highlighted button, don't need another indicator
     y.set_text_color(Color::SystemRed  );
     // n.set_text_color(Color::SystemBlack);
     self.content.add_subview(&y);
@@ -97,32 +98,50 @@ impl WindowDelegate for AppWindow {
 
     win.set_content_view(&self.content);
 
+    let yl	= Label::new();yl.set_text("y")	;self.content.add_subview(&yl	);
+    let nl	= Label::new();nl.set_text("↩")	;self.content.add_subview(&nl	);
+
+    let hn:f64 = 40.0; let hy:f64 = hn;
     LayoutConstraint::activate(&[
-      n            	.top     	.constraint_equal_to(&self.content.top          	).offset( 16.),
-      n            	.bottom  	.constraint_equal_to(&self.content.bottom       	).offset(-16.),
-      n            	.leading 	.constraint_equal_to(&self.content.leading      	).offset( 16.),
-      n            	.width   	.constraint_equal_to_constant(200.              	),
-      // n         	.height  	.constraint_equal_to_constant(20.               	),
-      y            	.top     	.constraint_equal_to(&self.content.top          	).offset(126.),
-      y            	.bottom  	.constraint_equal_to(&self.content.bottom       	).offset(-16.),
-      y            	.leading 	.constraint_greater_than_or_equal_to(&n.trailing	).offset(5.),
-      // y         	.leading 	.constraint_equal_to(&self.content.leading      	).offset(206.),
-      y            	.trailing	.constraint_equal_to(&self.content.trailing     	).offset(-46.),
-      y            	.width   	.constraint_equal_to(&n.width                   	).multiplier(4.),
-      // y         	.height  	.constraint_equal_to_constant(20.               	),
-      // self.blue 	.top     	.constraint_equal_to(&self.content.top          	).offset(146.),
-      // self.blue 	.leading 	.constraint_equal_to(&self.content.leading      	).offset( 16.),
-      // self.blue 	.bottom  	.constraint_equal_to(&self.content.bottom       	).offset(-16.),
-      // self.blue 	.width   	.constraint_equal_to_constant(100.              	),
-      // self.blue 	.height  	.constraint_equal_to_constant(10.               	),
-      // self.red  	.top     	.constraint_equal_to(&self.content.top          	).offset( 46.),
-      // self.red  	.leading 	.constraint_equal_to(&self.blue.trailing        	).offset( 16.),
-      // self.red  	.bottom  	.constraint_equal_to(&self.content.bottom       	).offset(-16.),
-      // self.green	.top     	.constraint_equal_to(&self.content.top          	).offset( 46.),
-      // self.green	.leading 	.constraint_equal_to(&self.red.trailing         	).offset( 16.),
-      // self.green	.trailing	.constraint_equal_to(&self.content.trailing     	).offset(-16.),
-      // self.green	.bottom  	.constraint_equal_to(&self.content.bottom       	).offset(-16.),
-      // self.green	.width   	.constraint_equal_to_constant(100.              	),
+      n    	.top     	.constraint_equal_to(&self.content.top                	).offset( 16.),
+      nl   	.top     	.constraint_equal_to(&n.center_y                      	).offset(hn/2.0 +8.),
+      y    	.top     	.constraint_equal_to(&self.content.top                	).offset(126.),
+      yl   	.top     	.constraint_equal_to(&y.center_y                      	).offset(hy/2.0 +0.),
+      n    	.bottom  	.constraint_equal_to(&self.content.bottom             	).offset(-16.),
+      y    	.bottom  	.constraint_equal_to(&self.content.bottom             	).offset(-16.),
+      n    	.leading 	.constraint_equal_to(&self.content.leading            	).offset( 16.),y	.leading	.constraint_greater_than_or_equal_to(&n.trailing	).offset(5.),
+      nl   	.center_x	.constraint_equal_to(&n.center_x                      	),
+      y    	.trailing	.constraint_equal_to(&self.content.trailing           	).offset(-46.),
+      yl   	.center_x	.constraint_equal_to(&y.center_x                      	),
+      n    	.width   	.constraint_equal_to_constant(200.                    	)             ,n	.height	.constraint_equal_to_constant(hn	),
+      y    	.width   	.constraint_equal_to(&n.width                         	)             ,y	.height	.constraint_equal_to_constant(hy	),
+      // yl	.top     	.constraint_equal_to(&self.content.bottom             	).offset( -8.),
+      // yl	.top     	.constraint_equal_to(&y.bottom                        	).offset(16.),
+      // yl	.top     	.constraint_equal_to(&self.content.top                	).offset(126.),
+      // nl	.bottom  	.constraint_equal_to(&self.content.bottom             	).offset(-18.),
+      // nl	.top     	.constraint_equal_to(&self.content.bottom             	).offset( -8.),
+      // nl	.top     	.constraint_greater_than_or_equal_to(&self.content.top	).offset( 16.),
+      // nl	.top     	.constraint_equal_to(&n.top                           	).offset(30.),
+      // nl	.bottom  	.constraint_equal_to(&n.bottom                        	).offset(- 8.),
+      // nl	.top     	.constraint_equal_to(&n.top                           	).offset( 40.),
+      // yl	.top     	.constraint_equal_to(&y.top                           	).offset( 40.),
+      // y 	.width   	.constraint_equal_to(&n.width                         	).multiplier(4.),
+      // y 	.leading 	.constraint_equal_to(&self.content.leading            	).offset(206.),
+      // y 	.height  	.constraint_equal_to(&n.height                        	).multiplier(2.), //bugs
+      //
+      // self.blue 	.top     	.constraint_equal_to(&self.content.top     	).offset(146.),
+      // self.blue 	.leading 	.constraint_equal_to(&self.content.leading 	).offset( 16.),
+      // self.blue 	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
+      // self.blue 	.width   	.constraint_equal_to_constant(100.         	),
+      // self.blue 	.height  	.constraint_equal_to_constant(10.          	),
+      // self.red  	.top     	.constraint_equal_to(&self.content.top     	).offset( 46.),
+      // self.red  	.leading 	.constraint_equal_to(&self.blue.trailing   	).offset( 16.),
+      // self.red  	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
+      // self.green	.top     	.constraint_equal_to(&self.content.top     	).offset( 46.),
+      // self.green	.leading 	.constraint_equal_to(&self.red.trailing    	).offset( 16.),
+      // self.green	.trailing	.constraint_equal_to(&self.content.trailing	).offset(-16.),
+      // self.green	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
+      // self.green	.width   	.constraint_equal_to_constant(100.         	),
     ]);
     // LayoutConstraint::activate(&[
       // y	.width	.constraint_equal_to(&n.width	).multiplier(4.),
