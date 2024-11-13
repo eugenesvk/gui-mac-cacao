@@ -37,7 +37,37 @@ use cacao::{
   control	::{Control,ControlSize,},
   color  	::{Color, Theme},
 };
+use cacao::appkit::FocusRingType;
 
+use objc::{class, msg_send, sel, sel_impl,runtime	::Object, };
+use core_graphics::base::CGFloat;
+
+// no effect since multiplier doesn't seem to be used
+#[allow(dead_code)]
+trait LayoutConstraintExt {
+  fn multiplier    <F:Into<f64>>( self, multiplier:F) -> Self;
+  fn set_multiplier<F:Into<f64>>(&self, multiplier:F);
+}
+impl LayoutConstraintExt for cacao::layout::LayoutConstraint {
+  /// Sets the multiplier for this constraint
+  fn multiplier<F:Into<f64>>(self, multiplier:F) -> Self {
+    let multiplier: f64 = multiplier.into();
+    unsafe {let m = multiplier as CGFloat; let _: () = msg_send![&*self.constraint, setConstant:m];}
+    // println!("multiplier={}",&multiplier);
+    LayoutConstraint {
+      animator  	: self.animator,
+      constraint	: self.constraint,
+      offset    	: self.offset,
+      multiplier	: multiplier,
+      priority  	: self.priority
+    }
+  }
+  /// Sets the multiplier of a borrowed constraint
+  fn set_multiplier<F:Into<f64>>(&self, multiplier:F) {
+    let multiplier: f64 = multiplier.into();
+    unsafe {let m = multiplier as CGFloat; let _: () = msg_send![&*self.constraint, setConstant:m];}
+  }
+}
 impl WindowDelegate for AppWindow {
   const NAME: &'static str = "WindowDelegate";
   fn did_load(&mut self, win: Window) {
@@ -50,47 +80,55 @@ impl WindowDelegate for AppWindow {
       (Theme::Dark, _)	=> Color::SystemGreen,
       _               	=> Color::SystemRed});
 
-    // let mut y=Button::new("❗Overwrite"	);y.set_action(|| {});y.set_key_equivalent("\r");//🖍
-    // self.content.add_subview(&y);
-    // let mut n=Button::new("Overwrite"	);n.set_action(|| {});n.set_key_equivalent("a");//🖍
-    // self.content.add_subview(&n);
-
-    let mut y=Button::new("❗Overwrite"	);y.set_action(|| {});y.set_key_equivalent("\r");//🖍
-    let mut n=Button::new("Cancel"    	);n.set_action(|| {});n.set_key_equivalent("a");
-    y.set_highlighted(false);y.set_bezel_style(BezelStyle::Inline);y.set_control_size(ControlSize::Large);y.set_text_color(Color::SystemRed  );
-    n.set_highlighted(true );n.set_bezel_style(BezelStyle::RegularSquare);n.set_control_size(ControlSize::Large);n.set_text_color(Color::SystemBlack);
+    let mut y=Button::new("❗Overwrite"	);y.set_action(|| {});y.set_key_equivalent("y");
+    let mut n=Button::new("Cancel"    	);n.set_action(|| {});n.set_key_equivalent("\r");
+    y.set_control_size(ControlSize::Large);
+    n.set_control_size(ControlSize::Large);
+    y.set_alpha(0.1);
+    n.set_alpha(0.9);
+    y.set_bezel_style(BezelStyle::RegularSquare);
+    n.set_bezel_style(BezelStyle::RegularSquare); // RegularSquare, ShadowlessSquare,SmallSquare,TexturedSquare break become vertical 100% of the height
+    y.set_focus_ring_type(FocusRingType::Exterior); // seems to have no effect
+    n.set_focus_ring_type(FocusRingType::None); // already an highlighted button, don't u
+    y.set_text_color(Color::SystemRed  );
+    // n.set_text_color(Color::SystemBlack);
     self.content.add_subview(&y);
     self.content.add_subview(&n);
 
     win.set_content_view(&self.content);
 
     LayoutConstraint::activate(&[
-      n            	.top     	.constraint_equal_to(&self.content.top     	).offset(16.),
-      n            	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
-      n            	.leading 	.constraint_equal_to(&self.content.leading 	).offset( 16.),
-      n            	.width   	.constraint_equal_to_constant(100.         	),
-      // n         	.height  	.constraint_equal_to_constant(20.          	),
-      y            	.top     	.constraint_equal_to(&self.content.top     	).offset(126.),
-      y            	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
-      // y         	.leading 	.constraint_equal_to(&self.content.leading 	).offset(206.),
-      y            	.trailing	.constraint_equal_to(&self.content.trailing	).offset(-16.),
-      y            	.width   	.constraint_equal_to_constant(200.         	),
-      // y         	.height  	.constraint_equal_to_constant(20.          	),
-      // self.blue 	.top     	.constraint_equal_to(&self.content.top     	).offset(146.),
-      // self.blue 	.leading 	.constraint_equal_to(&self.content.leading 	).offset( 16.),
-      // self.blue 	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
-      // self.blue 	.width   	.constraint_equal_to_constant(100.         	),
-      // self.blue 	.height  	.constraint_equal_to_constant(10.          	),
-      // self.red  	.top     	.constraint_equal_to(&self.content.top     	).offset( 46.),
-      // self.red  	.leading 	.constraint_equal_to(&self.blue.trailing   	).offset( 16.),
-      // self.red  	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
-      // self.green	.top     	.constraint_equal_to(&self.content.top     	).offset( 46.),
-      // self.green	.leading 	.constraint_equal_to(&self.red.trailing    	).offset( 16.),
-      // self.green	.trailing	.constraint_equal_to(&self.content.trailing	).offset(-16.),
-      // self.green	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
-      // self.green	.width   	.constraint_equal_to_constant(100.         	),
+      n            	.top     	.constraint_equal_to(&self.content.top          	).offset( 16.),
+      n            	.bottom  	.constraint_equal_to(&self.content.bottom       	).offset(-16.),
+      n            	.leading 	.constraint_equal_to(&self.content.leading      	).offset( 16.),
+      n            	.width   	.constraint_equal_to_constant(200.              	),
+      // n         	.height  	.constraint_equal_to_constant(20.               	),
+      y            	.top     	.constraint_equal_to(&self.content.top          	).offset(126.),
+      y            	.bottom  	.constraint_equal_to(&self.content.bottom       	).offset(-16.),
+      y            	.leading 	.constraint_greater_than_or_equal_to(&n.trailing	).offset(5.),
+      // y         	.leading 	.constraint_equal_to(&self.content.leading      	).offset(206.),
+      y            	.trailing	.constraint_equal_to(&self.content.trailing     	).offset(-46.),
+      y            	.width   	.constraint_equal_to(&n.width                   	).multiplier(4.),
+      // y         	.height  	.constraint_equal_to_constant(20.               	),
+      // self.blue 	.top     	.constraint_equal_to(&self.content.top          	).offset(146.),
+      // self.blue 	.leading 	.constraint_equal_to(&self.content.leading      	).offset( 16.),
+      // self.blue 	.bottom  	.constraint_equal_to(&self.content.bottom       	).offset(-16.),
+      // self.blue 	.width   	.constraint_equal_to_constant(100.              	),
+      // self.blue 	.height  	.constraint_equal_to_constant(10.               	),
+      // self.red  	.top     	.constraint_equal_to(&self.content.top          	).offset( 46.),
+      // self.red  	.leading 	.constraint_equal_to(&self.blue.trailing        	).offset( 16.),
+      // self.red  	.bottom  	.constraint_equal_to(&self.content.bottom       	).offset(-16.),
+      // self.green	.top     	.constraint_equal_to(&self.content.top          	).offset( 46.),
+      // self.green	.leading 	.constraint_equal_to(&self.red.trailing         	).offset( 16.),
+      // self.green	.trailing	.constraint_equal_to(&self.content.trailing     	).offset(-16.),
+      // self.green	.bottom  	.constraint_equal_to(&self.content.bottom       	).offset(-16.),
+      // self.green	.width   	.constraint_equal_to_constant(100.              	),
     ]);
-    self.button = Some(y);
+    // LayoutConstraint::activate(&[
+      // y	.width	.constraint_equal_to(&n.width	).multiplier(4.),
+    // ]);
+      // y	.width	.constraint_equal_to(&n.width	).set_multiplier(4.);
+    self.button  = Some(y);
     self.button2 = Some(n);
   }
 }
