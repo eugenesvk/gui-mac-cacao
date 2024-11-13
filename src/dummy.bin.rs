@@ -16,6 +16,7 @@ use std::result;
 type Result<T> = result::Result<T, Box<dyn Error>>;
 #![allow(unused_imports)]
 use cacao::appkit::menu::{Menu, MenuItem};use cacao::appkit::window::{Window, WindowConfig, WindowDelegate};use cacao::appkit::{App, AppDelegate};
+use cacao::foundation::NSString;
 struct BasicApp {window: Window<AppWindow>}
 impl AppDelegate for BasicApp {
   fn did_finish_launching(&self) {
@@ -36,6 +37,7 @@ use cacao::{
   button 	::{Button,BezelStyle, BezelStyle as Border},
   control	::{Control,ControlSize,},
   color  	::{Color, Theme},
+  image  	::{Image,MacSystemIcon},
 };
 use cacao::appkit::FocusRingType;
 
@@ -68,6 +70,15 @@ impl LayoutConstraintExt for cacao::layout::LayoutConstraint {
     unsafe {let m = multiplier as CGFloat; let _: () = msg_send![&*self.constraint, setConstant:m];}
   }
 }
+trait ButtonExt {
+  fn set_image_pos(&mut self, image_pos:NSCellImagePosition);
+}
+use objc2_app_kit::{NSCellImagePosition,};
+impl ButtonExt for cacao::button::Button {
+  /// Sets an image position on the underlying button
+  fn set_image_pos(&mut self, image_pos:NSCellImagePosition) {
+    self.objc.with_mut(|obj| unsafe {let _: () = msg_send![obj, setImagePosition:image_pos];});}
+}
 impl WindowDelegate for AppWindow {
   const NAME: &'static str = "WindowDelegate";
   fn did_load(&mut self, win: Window) {
@@ -80,8 +91,8 @@ impl WindowDelegate for AppWindow {
       (Theme::Dark, _)	=> Color::SystemGreen,
       _               	=> Color::SystemRed});
 
-    let mut y=Button::new("❗Overwrite"	);y.set_action(|| {});y.set_key_equivalent("y");
-    let mut n=Button::new("Cancel"    	);n.set_action(|| {});n.set_key_equivalent("\r");
+    let mut y=Button::new("Overwrite"	);y.set_action(|| {});y.set_key_equivalent("y"); //❗
+    let mut n=Button::new("Cancel"   	);n.set_action(|| {});n.set_key_equivalent("\r");
     y.set_control_size(ControlSize::Large);
     n.set_control_size(ControlSize::Large);
     // y.set_alpha(0.1);
@@ -93,6 +104,9 @@ impl WindowDelegate for AppWindow {
     n.set_focus_ring_type(FocusRingType::None); // already an highlighted button, don't need another indicator
     y.set_text_color(Color::SystemRed  );
     // n.set_text_color(Color::SystemBlack);
+    let icon = Image::toolbar_icon(MacSystemIcon::PreferencesAdvanced, "Advanced");
+    y.set_image(icon);
+    y.set_image_pos(NSCellImagePosition::NSImageLeft);
     self.content.add_subview(&y);
     self.content.add_subview(&n);
 
@@ -101,11 +115,11 @@ impl WindowDelegate for AppWindow {
     let yl	= Label::new();yl.set_text("y")	;self.content.add_subview(&yl	);
     let nl	= Label::new();nl.set_text("↩")	;self.content.add_subview(&nl	);
 
-    let hn:f64 = 40.0; let hy:f64 = hn;
+    let hn:f64 = 20.0; let hy:f64 = hn; //20 seems to be the default large, but manually setting.height makes the buttons bug and have diff H
     LayoutConstraint::activate(&[
-      n    	.top     	.constraint_equal_to(&self.content.top                	).offset( 16.),
-      nl   	.top     	.constraint_equal_to(&n.center_y                      	).offset(hn/2.0 +8.),
-      y    	.top     	.constraint_equal_to(&self.content.top                	).offset(126.),
+      n    	.top     	.constraint_equal_to(&self.content.top                	).offset( 46.),
+      nl   	.top     	.constraint_equal_to(&n.center_y                      	).offset(hn/2.0 +2.),
+      y    	.top     	.constraint_equal_to(&self.content.top                	).offset( 46.),
       yl   	.top     	.constraint_equal_to(&y.center_y                      	).offset(hy/2.0 +0.),
       n    	.bottom  	.constraint_equal_to(&self.content.bottom             	).offset(-16.),
       y    	.bottom  	.constraint_equal_to(&self.content.bottom             	).offset(-16.),
@@ -113,8 +127,8 @@ impl WindowDelegate for AppWindow {
       nl   	.center_x	.constraint_equal_to(&n.center_x                      	),
       y    	.trailing	.constraint_equal_to(&self.content.trailing           	).offset(-46.),
       yl   	.center_x	.constraint_equal_to(&y.center_x                      	),
-      n    	.width   	.constraint_equal_to_constant(200.                    	)             ,n	.height	.constraint_equal_to_constant(hn	),
-      y    	.width   	.constraint_equal_to(&n.width                         	)             ,y	.height	.constraint_equal_to_constant(hy	),
+      n    	.width   	.constraint_equal_to_constant(200.                    	)             ,//n	.height	.constraint_equal_to_constant(hn	),
+      y    	.width   	.constraint_equal_to(&n.width                         	)             ,//y	.height	.constraint_equal_to_constant(hy	),
       // yl	.top     	.constraint_equal_to(&self.content.bottom             	).offset( -8.),
       // yl	.top     	.constraint_equal_to(&y.bottom                        	).offset(16.),
       // yl	.top     	.constraint_equal_to(&self.content.top                	).offset(126.),
