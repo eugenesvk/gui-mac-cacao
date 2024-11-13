@@ -103,9 +103,8 @@ impl WindowDelegate for AppWindow {
     n.set_control_size(ControlSize::Large);
     // y.set_alpha(0.1);
     // n.set_alpha(0.9);
-    y.set_bezel_style(BezelStyle::RegularSquare);
-    n.set_bezel_style(BezelStyle::RegularSquare); // RegularSquare, ShadowlessSquare,SmallSquare,TexturedSquare break become vertical 100% of the height
-    n.set_bezel_style(BezelStyle::Rounded);
+    y.set_bezel_style(BezelStyle::Rounded);
+    n.set_bezel_style(BezelStyle::Rounded); // RegularSquare, ShadowlessSquare,SmallSquare,TexturedSquare break become vertical 100% of the height
     y.set_focus_ring_type(FocusRingType::Exterior); // seems to have no effect
     n.set_focus_ring_type(FocusRingType::None); // already an highlighted button, don't need another indicator
     y.set_text_color(Color::SystemRed  );
