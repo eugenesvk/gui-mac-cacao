@@ -37,6 +37,8 @@ use cacao::{
   button 	::{Button,BezelStyle, BezelStyle as Border,},
   control	::{Control,ControlSize,},
   color  	::{Color, Theme,},
+  image  	::{Image,MacSystemIcon,SFSymbol,},
+  utils  	::os::OS_VERSION,
 };
 use cacao::appkit::FocusRingType;
 
@@ -103,9 +105,14 @@ impl WindowDelegate for AppWindow {
     n.set_focus_ring_type(FocusRingType::None); // already an highlighted button, don't need another indicator
     y.set_text_color(Color::SystemRed  );
     // n.set_text_color(Color::SystemBlack);
-    let icon = Image::toolbar_icon(MacSystemIcon::PreferencesAdvanced, "Advanced");
-    y.set_image(icon);
-    y.set_image_pos(NSCellImagePosition::NSImageLeft);
+
+    if let os_info::Version::Semantic(os_major,_,_) = OS_VERSION.version() {
+      if *os_major >= 11 {//debug!("info major version={:?}", os_major);
+        let icon = Image::symbol(SFSymbol::SquareAndArrowDownOnSquareFill, "Overwrite"); //SFSymbol min version 11, alt MacSystemIcon
+        y.set_image(icon);
+        y.set_image_pos(NSCellImagePosition::NSImageLeft);
+      }
+    }
     self.content.add_subview(&y);
     self.content.add_subview(&n);
 
