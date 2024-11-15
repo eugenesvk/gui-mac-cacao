@@ -23,7 +23,7 @@ impl BasicApp {
   /// Monitor for key presses, and dispatch if they match an action we're after
   pub fn start_monitoring(&self) {
     let mut lock = self.key_monitor.write().unwrap();
-    *lock = Some(Event::local_monitor(EventMask::KeyDown | EventMask::KeyUp | EventMask::FlagsChanged, |evt| {
+    *lock = Some(Event::local_monitor(EventMask::KeyDown | EventMask::FlagsChanged, |evt| { // EventMask::KeyUp |
       //use calculator::{dispatch, Msg};
       let kind = evt.kind();
       let ev_t:&str = match kind {
@@ -76,7 +76,7 @@ use cacao::appkit::{Event, EventMask, EventMonitor};
 #[derive(Default)] struct AppWindow {content:View, button:Option<Button>, button2:Option<Button>,} //option avoids lack of default Button
 use cacao::{
   layout 	::{Layout,LayoutConstraint,},
-  text   	::{Label,TextAlign,},
+  text   	::{Label,TextAlign,Font,AttributedString, AttributedString as RichStr },
   view   	::{View,ViewDelegate,ViewController,},
   switch 	::Switch,
   button 	::{Button,BezelStyle, BezelStyle as Border,ImagePosition,},
@@ -130,6 +130,7 @@ impl LayoutConstraintExt for cacao::layout::LayoutConstraint {
 //     })
 //   }
 // }
+use core::ops::Range;
 fn press_y(s:&str) {println!("Y action from: {}",s)}
 fn press_n(s:&str) {println!("N action from: {}",s)}
 impl WindowDelegate for AppWindow {
@@ -145,7 +146,21 @@ impl WindowDelegate for AppWindow {
       _               	=> Color::SystemRed});
 
     let mut y=Button::new("O̲verwrite"	);y.set_action(|_| {press_y("UI button")});y.set_key_equivalent("o"); //❗
-    let mut n=Button::new("S̲kip"     	);n.set_action(|_| {press_n("UI button")});n.set_key_equivalent("\r");
+    // let mut n=Button::new("S̲kip"  	);n.set_action(|_| {press_n("UI button")});n.set_key_equivalent("\r");
+
+    let lbl = "S̲kip"; let lbl_u16 = lbl.encode_utf16(); let len = lbl_u16.count() as isize;
+    let acc = "S̲"; let acc_len = acc.encode_utf16().count() as isize;
+    let mut n=Button::new(lbl	);n.set_action(|_| {press_n("UI button")});n.set_key_equivalent("\r");
+    let mut attr_str = RichStr::new(lbl);
+    let font = Font::system(16.); attr_str.set_font(font, Range{start:0,end:len}); // make label bigger
+
+    let accelerator = Range{start:0,end:acc_len}; //[start,end)
+    attr_str.set_text_color(cacao::color::Color::rgb(150,255,150), accelerator.clone());
+    let font = Font::bold_system(16.);
+    attr_str.set_font(font, accelerator);
+    n.set_attributed_text(attr_str);
+
+
     y.set_control_size(ControlSize::Large);
     n.set_control_size(ControlSize::Large);
     // y.set_alpha(0.1);
@@ -169,8 +184,19 @@ impl WindowDelegate for AppWindow {
 
     win.set_content_view(&self.content);
 
-    let yl	= Label::new();yl.set_text("y")  	;self.content.add_subview(&yl	);
-    let nl	= Label::new();nl.set_text("↩¦c")	;self.content.add_subview(&nl	);
+    // let yl	= Label::new();yl.set_text("y")   	;self.content.add_subview(&yl	);
+    let nl   	= Label::new();nl.set_text("↩¦c") 	;self.content.add_subview(&nl	);
+    let yl   	= Label::new(); //yl.set_text("y")	;
+    let mut attr_str = RichStr::new("🤦🏼‍♂️✗🦀✗sdasfsd");
+    let alen = "🦀".len(); // 4, but ↓ is 2 symbols, check https://stackoverflow.com/questions/50409143/convert-utf-8-bytes-emoji-code-to-emoji-icon-as-a-text
+    let alen2 = "🤦🏼‍♂️".len(); //17
+    let ln3 = "🤦🏼‍♂️".encode_utf16().count(); //7
+    // is this u8 vs u16?
+    println!("a={} b={} c={}",alen,alen2, ln3);
+    let green_range =Range{start:0,end:7}; //[start,end) 8 starts coloring ✗
+    attr_str.set_text_color(cacao::color::Color::rgb(0,255,0),green_range);
+    yl.set_attributed_text(attr_str);
+    self.content.add_subview(&yl	);
 
     let hn:f64 = 20.0; let hy:f64 = hn; //20 seems to be the default large, but manually setting.height makes the buttons bug and have diff H
     LayoutConstraint::activate(&[
