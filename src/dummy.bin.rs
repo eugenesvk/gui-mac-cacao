@@ -36,7 +36,10 @@ impl BasicApp {
          EventType::KeyDown
         |EventType::KeyUp	=> {
           let chars = evt.characters(); //characters associated with a key-up or key-down event
-          // dbg!("{} 𝚻{:?} ev_t={} ev={:?}", chars, kind, ev_t, evt);
+          let chars = evt.characters_ignoring_modifiers(); //characters associated with a key-up or key-down event w/o mods (except ⇧)
+          let key_code = evt.key_code(); //virtual code for the key associated with the event.
+          let mod_flag = evt.modifier_flags(); //virtual code for the key associated with the event.
+          println!("{} {}𝚻{:?} vk={} mod_flag={}", chars, ev_t,kind, key_code, mod_flag);
           match chars.as_ref() {
             "y" => {press_y("letter y")},
             "c" => {press_n("letter c")},
@@ -44,6 +47,12 @@ impl BasicApp {
             _ => return Some(evt),
           }
         },
+        // use key code to diff ‹vs› in modifiers as key presses (not as part of modifier flags)
+        EventType::FlagsChanged	=> {
+          let key_code = evt.key_code(); //virtual code for the key associated with the event.
+          let mod_flag = evt.modifier_flags(); //virtual code for the key associated with the event.
+          println!("   {}𝚻{:?} vk={} mod_flag={:#}", ev_t,kind, key_code, mod_flag);
+        }
         _	=> {//dbg!("  𝚻{:?} ev_t={} ev={:?}", kind, ev_t, evt);
           return None},
       }
