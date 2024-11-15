@@ -87,7 +87,7 @@ use cacao::{
 };
 use cacao::appkit::FocusRingType;
 
-use cacao::objc::{class, msg_send, sel, sel_impl};
+use cacao::objc::{class, msg_send, sel};
 use core_graphics::base::CGFloat;
 
 // no effect since multiplier doesn't seem to be used
