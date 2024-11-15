@@ -9,8 +9,8 @@ build  	= "build.rs"
 members = ["./","xtask"]	# relative to the workspace root
 
 [[bin]]
-name	= "dummy_bin"
-path	= "src/dummy.bin.rs"
+name	= "cacao_yes_no"
+path	= "src/cacao_yes_no.rs"
 
 [lib]
 name      	= "dummy_lib"
