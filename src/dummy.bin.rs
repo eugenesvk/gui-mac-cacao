@@ -176,7 +176,7 @@ impl WindowDelegate for AppWindow {
       if *os_major >= 11 {//debug!("info major version={:?}", os_major);
         let icon = Image::symbol(SFSymbol::SquareAndArrowDownOnSquareFill, "Overwrite"); //SFSymbol min version 11, alt MacSystemIcon
         y.set_image(icon);
-        y.set_image_position(ImagePosition::ImageLeft);
+        y.set_image_position(ImagePosition::ImageLeft); // developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Button/Tasks/SettingButtonImage.html
       }
     }
     self.content.add_subview(&y);
