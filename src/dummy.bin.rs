@@ -27,10 +27,10 @@ impl BasicApp {
       //use calculator::{dispatch, Msg};
       let kind = evt.kind();
       let ev_t:&str = match kind {
-        EventType::FlagsChanged	=> "Δ in ⇧⎈⎇⌘",
+        EventType::FlagsChanged	=> "Δ in ⇧⎈⌥⌘",
         EventType::KeyDown     	=> "↓",
         EventType::KeyUp       	=> "↑",
-        _                      	=> "other",
+        _                      	=> "?",
       };
       match evt.kind() {
          EventType::KeyDown
