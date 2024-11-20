@@ -39,8 +39,9 @@ impl BasicApp {
           let chars = evt.characters(); //characters associated with a key-up or key-down event
           let chars = evt.characters_ignoring_modifiers(); //characters associated with a key-up or key-down event w/o mods (except ⇧)
           let key_code = evt.key_code(); //virtual code for the key associated with the event.
-          let mod_flag = evt.modifier_flags(); //virtual code for the key associated with the event.
-          println!("{} {}𝚻{:?} vk={} mod_flag={}", chars, ev_t,kind, key_code, mod_flag);
+          let mod_flag = evt.modifier_flags(); //modifier flags for the key associated with the event.
+          let bits = str::replace(&format!("{: >24b}",mod_flag.bits()),"0"," ");
+          println!("{} {}𝚻{:?} vk={} mod_flag={}\tbits=0b{}", chars, ev_t,kind, key_code, mod_flag,bits);
           match chars.as_ref() {
             "y" => {press_y("letter y")},
             "c" => {press_n("letter c")},
@@ -51,8 +52,9 @@ impl BasicApp {
         // use key code to diff ‹vs› in modifiers as key presses (not as part of modifier flags)
         EventType::FlagsChanged	=> {
           let key_code = evt.key_code(); //virtual code for the key associated with the event.
-          let mod_flag = evt.modifier_flags(); //virtual code for the key associated with the event.
-          println!("   {}𝚻{:?} vk={} mod_flag={:#}", ev_t,kind, key_code, mod_flag);
+          let mod_flag = evt.modifier_flags(); //modifier flags for the key associated with the event.
+          let bits = str::replace(&format!("{: >24b}",mod_flag.bits()),"0"," ");
+          println!("   {}𝚻{:?} vk={} mod_flag={:#}\tbits=0b{}", ev_t,kind, key_code, mod_flag,bits);
         }
         _	=> {//dbg!("  𝚻{:?} ev_t={} ev={:?}", kind, ev_t, evt);
           return None},
