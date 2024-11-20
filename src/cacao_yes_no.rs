@@ -198,18 +198,42 @@ impl WindowDelegate for AppWindow {
 
     win.set_content_view(&self.content);
 
+    // Add colored button shortcut reminder labels using rich text formatting
     // let yl	= Label::new();yl.set_text("y")   	;self.content.add_subview(&yl	);
-    let nl   	= Label::new();nl.set_text("↩¦c") 	;self.content.add_subview(&nl	);
-    let yl   	= Label::new(); //yl.set_text("y")	;
-    let mut attr_str = RichStr::new("🤦🏼‍♂️✗🦀✗sdasfsd");
-    let alen = "🦀".len(); // 4, but ↓ is 2 symbols, check https://stackoverflow.com/questions/50409143/convert-utf-8-bytes-emoji-code-to-emoji-icon-as-a-text
-    let alen2 = "🤦🏼‍♂️".len(); //17
-    let ln3 = "🤦🏼‍♂️".encode_utf16().count(); //7
-    println!("a={} b={} c={}",alen,alen2, ln3);
-    let green_range =Range{start:0,end:7}; //[start,end) 8 starts coloring ✗
-    attr_str.set_text_color(cacao::color::Color::rgb(0,255,0),green_range);
+    // let nl	= Label::new();nl.set_text("↩¦c") 	;self.content.add_subview(&nl	);
+    let lbl = "y"; let lbl_u16 = lbl.encode_utf16(); let len = lbl_u16.count() as isize;
+    let acc = "y"; let acc_len = acc.encode_utf16().count() as isize;
+    let yl=Label::new();
+    let mut attr_str = RichStr::new(lbl);
+    // let font = Font::system(16.); attr_str.set_font(font, Range{start:0,end:len}); // make label bigger
+
+    let accelerator = Range{start:0,end:acc_len}; //[start,end)
+    attr_str.set_text_color(cacao::color::Color::rgb(240,140,40), accelerator.clone());
+    // let font = Font::bold_system(16.); attr_str.set_font(font, accelerator);
     yl.set_attributed_text(attr_str);
     self.content.add_subview(&yl	);
+
+    let lbl = "↩"; let lbl_u16 = lbl.encode_utf16(); let len = lbl_u16.count() as isize;
+    let acc = "↩"; let acc_len = acc.encode_utf16().count() as isize;
+    let nl1=Label::new();
+    let mut attr_str = RichStr::new(lbl);
+    // let font = Font::system(16.); attr_str.set_font(font, Range{start:0,end:len}); // make label bigger
+    let accelerator = Range{start:0,end:acc_len}; //[start,end)
+    attr_str.set_text_color(cacao::color::Color::rgb(240,140,40), accelerator.clone());
+    // let font = Font::bold_system(16.); attr_str.set_font(font, accelerator);
+    nl1.set_attributed_text(attr_str);
+    self.content.add_subview(&nl1	);
+
+    let lbl = "c"; let lbl_u16 = lbl.encode_utf16(); let len = lbl_u16.count() as isize;
+    let acc = "c"; let acc_len = acc.encode_utf16().count() as isize;
+    let nl2=Label::new();
+    let mut attr_str = RichStr::new(lbl);
+    // let font = Font::system(16.); attr_str.set_font(font, Range{start:0,end:len}); // make label bigger
+    let accelerator = Range{start:0,end:acc_len}; //[start,end)
+    attr_str.set_text_color(cacao::color::Color::rgb(240,140,40), accelerator.clone());
+    // let font = Font::bold_system(16.); attr_str.set_font(font, accelerator);
+    nl2.set_attributed_text(attr_str);
+    self.content.add_subview(&nl2	);
 
     let hn:f64 = 20.0; let hy:f64 = hn; //20 seems to be the default large, but manually setting.height makes the buttons bug and have diff H
     LayoutConstraint::activate(&[
