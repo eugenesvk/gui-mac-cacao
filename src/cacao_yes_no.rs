@@ -24,7 +24,7 @@ impl BasicApp {
   /// Monitor for key presses, and dispatch if they match an action we're after
   pub fn start_monitoring(&self) {
     let mut lock = self.key_monitor.write().unwrap();
-    *lock = Some(Event::local_monitor(EventMask::KeyDown | EventMask::FlagsChanged, |evt| { // EventMask::KeyUp |
+    *lock = Some(Event::local_monitor(EventMask::KeyDown | EventMask::KeyUp | EventMask::FlagsChanged, |evt| {
       //use calculator::{dispatch, Msg};
       let kind = evt.kind();
       let ev_t:&str = match kind {
