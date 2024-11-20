@@ -12,7 +12,7 @@ Each button has its "accelerator" shortcut keys:
   - Highlighted with a custom font type/size/color and a unicode combining underscore when it appears inside the button label: __O̲__ verwrite
   - Added to button corners like <kbd>↩</kbd>
 
-[Screenshot](./doc/Screenshot.png)
+![Screenshot](./doc/Screenshot.png)
 
 Also for rudimentary input debugging the app prints to console:
   - when button/accelerator keys are activated
