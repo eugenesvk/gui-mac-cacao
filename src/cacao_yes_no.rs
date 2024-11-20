@@ -148,6 +148,7 @@ impl WindowDelegate for AppWindow {
     // let mut y=Button::new("O̲verwrite"	);y.set_action(|_| {press_y("UI button")});y.set_key_equivalent("o"); //❗
     // let mut n=Button::new("S̲kip"  	);n.set_action(|_| {press_n("UI button")});n.set_key_equivalent("\r");
 
+    // Add colored button labels, highlighting the first accelerator underlined letter via rich string formatting
     let lbl = "S̲kip"; let lbl_u16 = lbl.encode_utf16(); let len = lbl_u16.count() as isize;
     let acc = "S̲"; let acc_len = acc.encode_utf16().count() as isize;
     let mut n=Button::new(lbl	);n.set_action(|_| {press_n("UI button")});n.set_key_equivalent("\r");
@@ -173,6 +174,7 @@ impl WindowDelegate for AppWindow {
     y.set_attributed_text(attr_str);
 
 
+    // experimental button design
     y.set_control_size(ControlSize::Large);
     n.set_control_size(ControlSize::Large);
     // y.set_alpha(0.1);
@@ -203,7 +205,6 @@ impl WindowDelegate for AppWindow {
     let alen = "🦀".len(); // 4, but ↓ is 2 symbols, check https://stackoverflow.com/questions/50409143/convert-utf-8-bytes-emoji-code-to-emoji-icon-as-a-text
     let alen2 = "🤦🏼‍♂️".len(); //17
     let ln3 = "🤦🏼‍♂️".encode_utf16().count(); //7
-    // is this u8 vs u16?
     println!("a={} b={} c={}",alen,alen2, ln3);
     let green_range =Range{start:0,end:7}; //[start,end) 8 starts coloring ✗
     attr_str.set_text_color(cacao::color::Color::rgb(0,255,0),green_range);
