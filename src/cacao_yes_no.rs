@@ -29,9 +29,9 @@ impl BasicApp {
       let kind = evt.kind();
       let ev_t:&str = match kind {
         EventType::FlagsChanged	=> &format!("Δ in {}{}{}{}{}{:#}",&Mod::CapsLock,&Mod::Shift,&Mod::Control,&Mod::Option,&Mod::Command,&Mod::Function),
-        EventType::KeyDown	=> "↓",
-        EventType::KeyUp  	=> "↑",
-        _                 	=> "?",
+        EventType::KeyDown     	=> "↓",
+        EventType::KeyUp       	=> "↑",
+        _                      	=> "?",
       };
       match evt.kind() {
          EventType::KeyDown
