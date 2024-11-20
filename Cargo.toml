@@ -26,7 +26,8 @@ anyhow       	= "1.0"
 faccess      	= "0.2"
 # OS GUI (shared sub-deps must match the ones used in cacao)
 # cacao          	= "0.4.0-beta2"
-cacao            	= {path="../../gui/cacao"}
+# cacao          	= {path="../../gui/cacao"}
+cacao            	= {git="https://github.com/eugenesvk/cacao", branch="0.4.0-beta2-dev"}
 # core-foundation	= { git = "https://github.com/madsmtm/core-foundation-rs.git", rev = "7d593d016175755e492a92ef89edca68ac3bd5cd" }
 core-graphics    	= { git = "https://github.com/madsmtm/core-foundation-rs.git", rev = "7d593d016175755e492a92ef89edca68ac3bd5cd" }
 # OS integration
