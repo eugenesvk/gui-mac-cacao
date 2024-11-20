@@ -145,7 +145,7 @@ impl WindowDelegate for AppWindow {
       (Theme::Dark, _)	=> Color::SystemGreen,
       _               	=> Color::SystemRed});
 
-    let mut y=Button::new("O̲verwrite"	);y.set_action(|_| {press_y("UI button")});y.set_key_equivalent("o"); //❗
+    // let mut y=Button::new("O̲verwrite"	);y.set_action(|_| {press_y("UI button")});y.set_key_equivalent("o"); //❗
     // let mut n=Button::new("S̲kip"  	);n.set_action(|_| {press_n("UI button")});n.set_key_equivalent("\r");
 
     let lbl = "S̲kip"; let lbl_u16 = lbl.encode_utf16(); let len = lbl_u16.count() as isize;
@@ -159,6 +159,18 @@ impl WindowDelegate for AppWindow {
     let font = Font::bold_system(16.);
     attr_str.set_font(font, accelerator);
     n.set_attributed_text(attr_str);
+
+    let lbl = "O̲verwrite"; let lbl_u16 = lbl.encode_utf16(); let len = lbl_u16.count() as isize;
+    let acc = "O̲"; let acc_len = acc.encode_utf16().count() as isize;
+    let mut y=Button::new(lbl	);y.set_action(|_| {press_n("UI button")});y.set_key_equivalent("o");
+    let mut attr_str = RichStr::new(lbl);
+    let font = Font::system(16.); attr_str.set_font(font, Range{start:0,end:len}); // make label bigger
+
+    let accelerator = Range{start:0,end:acc_len}; //[start,end)
+    attr_str.set_text_color(cacao::color::Color::rgb(200,0,0), accelerator.clone());
+    let font = Font::bold_system(16.);
+    attr_str.set_font(font, accelerator);
+    y.set_attributed_text(attr_str);
 
 
     y.set_control_size(ControlSize::Large);
