@@ -181,7 +181,7 @@ impl WindowDelegate for AppWindow {
     n.set_bezel_style(BezelStyle::Rounded); // RegularSquare, ShadowlessSquare,SmallSquare,TexturedSquare break become vertical 100% of the height
     y.set_focus_ring_type(FocusRingType::Exterior); // seems to have no effect
     n.set_focus_ring_type(FocusRingType::None); // already an highlighted button, don't need another indicator
-    y.set_text_color(Color::SystemRed  );
+    // y.set_text_color(Color::SystemRed  );
     // n.set_text_color(Color::SystemBlack);
 
     if let os_info::Version::Semantic(os_major,_,_) = OS_VERSION.version() {
