@@ -14,7 +14,9 @@ Each button has its "accelerator" shortcut keys:
 
 [Screenshot](./doc/Screenshot.png)
 
-Also for rudimentary input debugging the app prints to console <kbd>↓</kbd>/<kbd>↑</kbd> key events and translates modifier changes (which do NOT generate <kbd>↓</kbd>/<kbd>↑</kbd> and due to this can't capture <kbd>⇪</kbd>CapsLock key presses properly, only key downs), e.g., pressing left then right <kbd>⇧</kbd>s (and releasing right then left) will notice the change in state and print the following:
+Also for rudimentary input debugging the app prints to console:
+  - when button/accelerator keys are activated
+  - on <kbd>↓</kbd>/<kbd>↑</kbd> key events and modifier changes (which do NOT generate <kbd>↓</kbd>/<kbd>↑</kbd> and due to this can't capture <kbd>⇪</kbd>CapsLock key presses properly, only key downs), e.g., pressing left then right <kbd>⇧</kbd>s (and releasing right then left) will notice the change in state and print the following:
 ```
 Δ in ⇪‹⇧›‹⌃›‹⌥›‹⌘›🌐𝚻FlagsChanged vk=56 mod_flag=‹⇧
 Δ in ⇪‹⇧›‹⌃›‹⌥›‹⌘›🌐𝚻FlagsChanged vk=60 mod_flag=‹⇧›
