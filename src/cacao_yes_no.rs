@@ -237,50 +237,31 @@ impl WindowDelegate for AppWindow {
 
     let hn:f64 = 20.0; let hy:f64 = hn; //20 seems to be the default large, but manually setting.height makes the buttons bug and have diff H
     LayoutConstraint::activate(&[
-      n    	.top     	.constraint_equal_to(&self.content.top                	).offset( 46.),
-      nl   	.top     	.constraint_equal_to(&n.center_y                      	).offset(hn/2.0 +2.),
-      y    	.top     	.constraint_equal_to(&self.content.top                	).offset( 46.),
-      yl   	.top     	.constraint_equal_to(&y.center_y                      	).offset(hy/2.0 +0.),
-      n    	.bottom  	.constraint_equal_to(&self.content.bottom             	).offset(-16.),
-      y    	.bottom  	.constraint_equal_to(&self.content.bottom             	).offset(-16.),
-      n    	.leading 	.constraint_equal_to(&self.content.leading            	).offset( 16.),y	.leading	.constraint_greater_than_or_equal_to(&n.trailing	).offset(5.),
-      nl   	.center_x	.constraint_equal_to(&n.center_x                      	),
-      y    	.trailing	.constraint_equal_to(&self.content.trailing           	).offset(-46.),
-      yl   	.center_x	.constraint_equal_to(&y.center_x                      	),
-      n    	.width   	.constraint_equal_to_constant(200.                    	)             ,//n	.height	.constraint_equal_to_constant(hn	),
-      y    	.width   	.constraint_equal_to(&n.width                         	)             ,//y	.height	.constraint_equal_to_constant(hy	),
-      // yl	.top     	.constraint_equal_to(&self.content.bottom             	).offset( -8.),
-      // yl	.top     	.constraint_equal_to(&y.bottom                        	).offset(16.),
-      // yl	.top     	.constraint_equal_to(&self.content.top                	).offset(126.),
-      // nl	.bottom  	.constraint_equal_to(&self.content.bottom             	).offset(-18.),
-      // nl	.top     	.constraint_equal_to(&self.content.bottom             	).offset( -8.),
-      // nl	.top     	.constraint_greater_than_or_equal_to(&self.content.top	).offset( 16.),
-      // nl	.top     	.constraint_equal_to(&n.top                           	).offset(30.),
-      // nl	.bottom  	.constraint_equal_to(&n.bottom                        	).offset(- 8.),
-      // nl	.top     	.constraint_equal_to(&n.top                           	).offset( 40.),
-      // yl	.top     	.constraint_equal_to(&y.top                           	).offset( 40.),
-      // y 	.width   	.constraint_equal_to(&n.width                         	).multiplier(4.),
-      // y 	.leading 	.constraint_equal_to(&self.content.leading            	).offset(206.),
-      // y 	.height  	.constraint_equal_to(&n.height                        	).multiplier(2.), //bugs
-      //
-      // self.blue 	.top     	.constraint_equal_to(&self.content.top     	).offset(146.),
-      // self.blue 	.leading 	.constraint_equal_to(&self.content.leading 	).offset( 16.),
-      // self.blue 	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
-      // self.blue 	.width   	.constraint_equal_to_constant(100.         	),
-      // self.blue 	.height  	.constraint_equal_to_constant(10.          	),
-      // self.red  	.top     	.constraint_equal_to(&self.content.top     	).offset( 46.),
-      // self.red  	.leading 	.constraint_equal_to(&self.blue.trailing   	).offset( 16.),
-      // self.red  	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
-      // self.green	.top     	.constraint_equal_to(&self.content.top     	).offset( 46.),
-      // self.green	.leading 	.constraint_equal_to(&self.red.trailing    	).offset( 16.),
-      // self.green	.trailing	.constraint_equal_to(&self.content.trailing	).offset(-16.),
-      // self.green	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
-      // self.green	.width   	.constraint_equal_to_constant(100.         	),
+      n  	.top     	.constraint_equal_to(&self.content.top     	).offset( 46.),
+      nl1	.top     	.constraint_equal_to(&n.top                	),
+      nl2	.bottom  	.constraint_equal_to(&n.bottom             	),
+      y  	.top     	.constraint_equal_to(&self.content.top     	).offset( 46.),
+      yl 	.top     	.constraint_equal_to(&y.top                	).offset(- 3.),
+      n  	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
+      y  	.bottom  	.constraint_equal_to(&self.content.bottom  	).offset(-16.),
+      n  	.leading 	.constraint_equal_to(&self.content.leading 	).offset( 16.),y	.leading	.constraint_greater_than_or_equal_to(&n.trailing	).offset(5.),
+      nl1	.right   	.constraint_equal_to(&n.right              	).offset(- 2.),
+      nl2	.right   	.constraint_equal_to(&n.right              	).offset(- 2.),
+      y  	.trailing	.constraint_equal_to(&self.content.trailing	).offset(-46.),
+      yl 	.right   	.constraint_equal_to(&y.right              	).offset(- 2.),
+      n  	.width   	.constraint_equal_to_constant(200.         	)             ,//n	.height	.constraint_equal_to_constant(hn	),
+      y  	.width   	.constraint_equal_to(&n.width              	)             ,//y	.height	.constraint_equal_to_constant(hy	),
+      // other old
+      // yl 	.center_x	.constraint_equal_to(&y.right              	).offset(- 8.),
+      // nl2	.top	.constraint_equal_to(&n.center_y	).offset( hn/2.0 -11.),
+      // nl1	.top	.constraint_equal_to(&n.center_y	).offset(-hn/1.0 + 5.),
+      // yl 	.top	.constraint_equal_to(&y.center_y	).offset(-hy/1.1 +0.),
+      // bottom center location
+      // nl	.top     	.constraint_equal_to(&n.center_y	).offset(hn/2.0 +2.),
+      //yl 	.top     	.constraint_equal_to(&y.center_y	).offset(hy/2.0 +0.),
+      // yl	.center_x	.constraint_equal_to(&y.center_x	),
+      // nl	.center_x	.constraint_equal_to(&n.center_x	),
     ]);
-    // LayoutConstraint::activate(&[
-      // y	.width	.constraint_equal_to(&n.width	).multiplier(4.),
-    // ]);
-      // y	.width	.constraint_equal_to(&n.width	).set_multiplier(4.);
     self.button  = Some(y);
     self.button2 = Some(n);
   }
