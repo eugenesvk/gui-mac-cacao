@@ -2,6 +2,7 @@
 #![allow(unused_imports,unused_variables,unreachable_code,dead_code,non_upper_case_globals)]
 extern crate helperes      as h    ;
 extern crate helperes_proc as hproc;
+use cacao::appkit::{EventModifierBitFlag, EventModifierBitFlag as Mod};
 use ::h            	::*; // gets macros :: prefix needed due to proc macro expansion
 pub use hproc      	::*; // gets proc macros
 pub use ::h::alias 	::*;
@@ -27,10 +28,10 @@ impl BasicApp {
       //use calculator::{dispatch, Msg};
       let kind = evt.kind();
       let ev_t:&str = match kind {
-        EventType::FlagsChanged	=> "Δ in ⇧⎈⌥⌘",
-        EventType::KeyDown     	=> "↓",
-        EventType::KeyUp       	=> "↑",
-        _                      	=> "?",
+        EventType::FlagsChanged	=> &format!("Δ in {}{}{}{}{}{:#}",&Mod::CapsLock,&Mod::Shift,&Mod::Control,&Mod::Option,&Mod::Command,&Mod::Function),
+        EventType::KeyDown	=> "↓",
+        EventType::KeyUp  	=> "↑",
+        _                 	=> "?",
       };
       match evt.kind() {
          EventType::KeyDown
