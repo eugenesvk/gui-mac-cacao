@@ -33,5 +33,6 @@ Using `vk`s and  `cacao::appkit::EventModifierBitFlag` can help identify which m
 
 - Using accelerators that aren't "natively" attached to the buttons via `set_key_equivalent` doesn't generate the visual button press effect
 - <kbd>⇪</kbd>CapsLock key↓↑ can't be tracked likely due to fundamental deficiencies of the underlying Mac key event mechanism
+- `multiplier` for autolayout doesn't seem to be supported ([issue](https://github.com/ryanmcgrath/cacao/issues/135))
 
 ## Credits
